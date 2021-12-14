@@ -1,0 +1,30 @@
+ version: "3.7"
+ services:
+   athens:
+     build: .
+     image: myathens
+     ports:
+       - 3000:3000
+     volumes:
+       - ./ATHENS_STORAGE:/var/lib/athens
+     environment:     
+       ATHENS_DISK_STORAGE_ROOT: /var/lib/athens 
+       ATHENS_STORAGE_TYPE: disk
+     healthcheck:
+       test: curl -sS http://127.0.0.1:3000 || exit 1
+       interval: 5s
+       timeout: 10s
+       retries: 3
+   golang:
+      image: golang
+      entrypoint: ["/home/goget.sh"]
+      volumes: 
+       - ./list:/home
+      environment:  
+       GO111MODULE: "on"
+       GOPROXY: http://athens:3000
+      depends_on:
+       athens:
+         condition: service_healthy
+      
+
