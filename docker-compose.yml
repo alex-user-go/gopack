@@ -17,6 +17,7 @@
        retries: 3
    golang:
       image: golang
+      working_dir: /home
       entrypoint: ["/home/goget.sh"]
       volumes: 
        - ./list:/home
